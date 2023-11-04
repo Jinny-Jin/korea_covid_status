@@ -6,17 +6,20 @@ const Main = () => {
 const [totalConfirmed, setTotalConfirmed] = useState(0)
 const [cityCovidData,setCityCovidData] = useState([])
 const [city,setCity] = useState(null)
+const [totalDeath, setTotalDeath] = useState(0)
 
 
 const clickCityName = (value) => {
     setCity(value)
 }
 
+
 useEffect(()=>{
     const fetchCityCovidData = async () => {
         let url = `http://apis.data.go.kr/1352000/ODMS_COVID_04/callCovid04Api?serviceKey=DpuTpEYsEJh8hrpKo4Bgvxv%2F0M0Yni%2F1GZ%2BA9FzWexYLll17xqLnDETxSUFTVsH29VC8uZt%2FfhPEEEYvPUuGFw%3D%3D&apiType=JSON`;
 
         if(!city){
+            url += `&numOfRows=5&pageNo=1`
             try{
                 const response = await axios.get(url)
                 setTotalConfirmed(response.data.totalCount)
@@ -29,31 +32,27 @@ useEffect(()=>{
             url += `&gubun=${city}`;
             try {
                 const response = await axios.get(url)
-                setCityCovidData(response.data.items)
+                setCityCovidData(response.data.items.sort((a,b)=> parseInt(b.deathCnt)-parseInt(a.deathCnt)))
             }catch(error){
                 console.log('에러',error)
             }
-    
         }
     }
 
-    const sortingTotalDeath = () => {
-        if(city && cityCovidData.length >0){
-            const sortedData = cityCovidData.sort((a,b)=> parseInt(b.deathCnt) - parseInt(a.deathCnt))
-            setCityCovidData(sortedData)
-        }    
-    }
-
     fetchCityCovidData()
-    sortingTotalDeath()
 },[city])
 
+
 // useEffect(()=>{
-//     if(city && cityCovidData.length >0){
-//         const sortedData = cityCovidData.sort((a,b)=> parseInt(b.deathCnt) - parseInt(a.deathCnt))
-//         setCityCovidData(sortedData)
+//     const sortingTotalDeath = () => {
+//         if(city && cityCovidData){
+//             const sortedData = cityCovidData.sort((a,b)=> parseInt(b.deathCnt) - parseInt(a.deathCnt))
+//             setCityCovidData(sortedData)
+//         }    
 //     }
-// },[cityCovidData,city])
+
+//     sortingTotalDeath()
+// },[cityCovidData,fetchCityCovidData])
 
 return (
     <>
@@ -82,7 +81,7 @@ return (
                 <div class="summary-wrapper flex">
                     <div class="deaths-container">
                         <h3 class="summary-title">Total Deaths</h3>
-                        <p class="total deaths"></p>
+                        <p class="total deaths">{totalDeath}</p>
                         <div class="list-wrapper">
                             <ol class="deaths-list">
                             {city && cityCovidData?.map(item=>(
@@ -100,6 +99,13 @@ return (
                         <p class="total recovered">0</p>
                         <div class="list-wrapper">
                             <ol class="recovered-list">
+                                {city && cityCovidData?.map(item=>(
+                                    <li>
+                                        {item.stdDay}
+                                        {item.gubun}
+                                        {item.isolClearCnt}
+                                    </li>
+                                ))}
                             </ol>
                         </div>
                     </div>
