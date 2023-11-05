@@ -102,9 +102,8 @@ header > h1 {
   padding-top: 20px;
 }
 .city-list{
-    padding: 10px 0 10px 20px;
-    /* margin-bottom: 10px; */
-    font-size: 30px;
+    padding: 7px 0 7px 20px;
+    font-size: 20px;
 }
 .city-list:hover{
     cursor: pointer;
@@ -166,6 +165,10 @@ header > h1 {
   height: 100%;
   overflow: hidden;
   overflow-y: auto;
+}
+.list-display{
+  display: flex;
+  justify-content: space-evenly;
 }
 .list-item-b {
   height: 35px;

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './Main.css'
+import { City } from '@/types/covidData'
 
 const Main = () => {
-const [totalConfirmed, setTotalConfirmed] = useState(0)
-const [cityCovidData,setCityCovidData] = useState([])
-const [city,setCity] = useState(null)
-const [totalDeath, setTotalDeath] = useState(0)
+const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
+const [cityCovidData,setCityCovidData] = useState<City[]>([])
+const [city,setCity] = useState<string | null>(null)
+const [totalDeath,setTotalDeath]= useState<number>(0)
 
-
-const clickCityName = (value) => {
+const clickCityName = (value:string) => {
     setCity(value)
 }
 
@@ -32,7 +32,9 @@ useEffect(()=>{
             url += `&gubun=${city}`;
             try {
                 const response = await axios.get(url)
-                setCityCovidData(response.data.items.sort((a,b)=> parseInt(b.deathCnt)-parseInt(a.deathCnt)))
+                const {items} = response.data
+                setCityCovidData(items.sort((a:City,b:City)=> parseInt(b.deathCnt)-parseInt(a.deathCnt)))
+                setTotalDeath(items.sort((a:City,b:City)=> parseInt(b.deathCnt)-parseInt(a.deathCnt))[0].deathCnt)
             }catch(error){
                 console.log('에러',error)
             }
@@ -43,77 +45,74 @@ useEffect(()=>{
 },[city])
 
 
-// useEffect(()=>{
-//     const sortingTotalDeath = () => {
-//         if(city && cityCovidData){
-//             const sortedData = cityCovidData.sort((a,b)=> parseInt(b.deathCnt) - parseInt(a.deathCnt))
-//             setCityCovidData(sortedData)
-//         }    
-//     }
-
-//     sortingTotalDeath()
-// },[cityCovidData,fetchCityCovidData])
-
 return (
     <>
-        <header class="flex justify-center">
+        <header className="flex justify-center">
             <h1>코로나 한국 현황판</h1>
         </header>
-        <main class="flex">
-            <div class="left-panel flex column">
-                <div class="total-board">
+        <main className="flex">
+            <div className="left-panel flex column">
+                <div className="total-board">
                     <p>Total Confirmed</p>
-                    <span class="confirmed-total">{totalConfirmed}</span>
+                    <span className="confirmed-total">{totalConfirmed}</span>
                 </div>
-                <div class="country-ranks">
+                <div className="country-ranks">
                     <p>Confirmed Cases by City</p>
-                    <ol class="rank-list">
+                    <ol className="rank-list">
                         {cityList.map(item=>(
-                        <li class="city-list" onClick={() => clickCityName(item)}>
+                        <li className="city-list" onClick={() => clickCityName(item)}>
                             {item}
                         </li>
                     ))}
                     </ol>
                 </div>
-                <p class="last-updated-time flex justify-center align-center"></p>
+                <p className="last-updated-time flex justify-center align-center"></p>
             </div>
-            <div class="right-panel">
-                <div class="summary-wrapper flex">
-                    <div class="deaths-container">
-                        <h3 class="summary-title">Total Deaths</h3>
-                        <p class="total deaths">{totalDeath}</p>
-                        <div class="list-wrapper">
-                            <ol class="deaths-list">
+            <div className="right-panel">
+                <div className="summary-wrapper flex">
+                    <div className="deaths-container">
+                        <h3 className="summary-title">Total Deaths</h3>
+                        <p className="total deaths">{totalDeath}</p>
+                        <div className="list-wrapper">
+                            <ol className="deaths-list">
                             {city && cityCovidData?.map(item=>(
-                                    <li>
+                                    <li className="list-display">
+                                        <span>
                                         {item.stdDay}
                                         {item.gubun}
+                                        </span>
+                                        <span>
                                         {item.deathCnt}
+                                        </span>
                                     </li>
                                 ))}
                             </ol>
                         </div>
                     </div>
-                    <div class="recovered-container">
-                        <h3 class="summary-title">Total Recovered</h3>
-                        <p class="total recovered">0</p>
-                        <div class="list-wrapper">
-                            <ol class="recovered-list">
+                    <div className="recovered-container">
+                        <h3 className="summary-title">Total Recovered</h3>
+                        <p className="total recovered">0</p>
+                        <div className="list-wrapper">
+                            <ol className="recovered-list">
                                 {city && cityCovidData?.map(item=>(
-                                    <li>
+                                    <li className="list-display">
+                                        <span>
                                         {item.stdDay}
                                         {item.gubun}
+                                        </span>
+                                        <span>
                                         {item.isolClearCnt}
+                                        </span>
                                     </li>
                                 ))}
                             </ol>
                         </div>
                     </div>
                 </div>
-                {/* <div class="chart-container">
+                {/* <div className="chart-container">
                 <canvas
                     id="lineChart"
-                    class="corona-chart"
+                    className="corona-chart"
                     style="width: 100%; height: 356px; background-color: #5b5656;"
                 ></canvas>
                 </div> */}
