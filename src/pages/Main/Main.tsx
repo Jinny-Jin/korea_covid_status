@@ -4,10 +4,11 @@ import './Main.css'
 import { City } from '@/types/covidData'
 
 const Main = () => {
-const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
+const [totalCovidData, setTotalCovidData] = useState<City[]>([])
 const [cityCovidData,setCityCovidData] = useState<City[]>([])
 const [city,setCity] = useState<string | null>(null)
-const [totalDeath,setTotalDeath]= useState<number>(0)
+const [totlaRecovered,setTotalRecovered] = useState<number>(0)
+const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
 
 const clickCityName = (value:string) => {
     setCity(value)
@@ -19,10 +20,13 @@ useEffect(()=>{
         let url = `http://apis.data.go.kr/1352000/ODMS_COVID_04/callCovid04Api?serviceKey=DpuTpEYsEJh8hrpKo4Bgvxv%2F0M0Yni%2F1GZ%2BA9FzWexYLll17xqLnDETxSUFTVsH29VC8uZt%2FfhPEEEYvPUuGFw%3D%3D&apiType=JSON`;
 
         if(!city){
-            url += `&numOfRows=5&pageNo=1`
+            url += `&std_Day=2023-08-30`
             try{
                 const response = await axios.get(url)
-                setTotalConfirmed(response.data.totalCount)
+                const {items} = response.data
+
+                setTotalCovidData(items)
+                setTotalConfirmed(items.filter((item : City)=> item.gubun === "합계")[0].defCnt)
             }catch(error){
                 console.log('에러',error)
             }
@@ -33,8 +37,9 @@ useEffect(()=>{
             try {
                 const response = await axios.get(url)
                 const {items} = response.data
+                
+                setTotalRecovered(items.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
                 setCityCovidData(items.sort((a:City,b:City)=> parseInt(b.deathCnt)-parseInt(a.deathCnt)))
-                setTotalDeath(items.sort((a:City,b:City)=> parseInt(b.deathCnt)-parseInt(a.deathCnt))[0].deathCnt)
             }catch(error){
                 console.log('에러',error)
             }
@@ -54,15 +59,22 @@ return (
             <div className="left-panel flex column">
                 <div className="total-board">
                     <p>Total Confirmed</p>
-                    <span className="confirmed-total">{totalConfirmed}</span>
+                    <span className="confirmed-total">
+                        {totalConfirmed}
+                    </span>
                 </div>
                 <div className="country-ranks">
                     <p>Confirmed Cases by City</p>
                     <ol className="rank-list">
-                        {cityList.map(item=>(
-                        <li className="city-list" onClick={() => clickCityName(item)}>
-                            {item}
-                        </li>
+                        {totalCovidData?.map((item : City)=>(
+                            item.gubun !== "합계" && item.gubun !== "검역" && (
+                                <li className="city-list" onClick={()=> clickCityName(item.gubun)}>
+                                    <span>
+                                    {item.defCnt}
+                                    </span>
+                                    {item.gubun}
+                                </li>
+                            )
                     ))}
                     </ol>
                 </div>
@@ -72,7 +84,7 @@ return (
                 <div className="summary-wrapper flex">
                     <div className="deaths-container">
                         <h3 className="summary-title">Total Deaths</h3>
-                        <p className="total deaths">{totalDeath}</p>
+                        <p className="total deaths">{cityCovidData[0]?.deathCnt}</p>
                         <div className="list-wrapper">
                             <ol className="deaths-list">
                             {city && cityCovidData?.map(item=>(
@@ -91,7 +103,7 @@ return (
                     </div>
                     <div className="recovered-container">
                         <h3 className="summary-title">Total Recovered</h3>
-                        <p className="total recovered">0</p>
+                        <p className="total recovered">{totlaRecovered}</p>
                         <div className="list-wrapper">
                             <ol className="recovered-list">
                                 {city && cityCovidData?.map(item=>(
