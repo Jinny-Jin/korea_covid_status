@@ -13,10 +13,3 @@ export interface City {
     gubun: string;
   }
   
-  export interface CovidSummaryResponse {
-    pageNo: number;
-    resultCode: number;
-    totalCount: number;
-    items: City[];
-  }
-  

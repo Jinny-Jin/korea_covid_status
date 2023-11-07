@@ -16,6 +16,7 @@ const clickCityName = (value:string) => {
 
 
 useEffect(()=>{
+
     const fetchCityCovidData = async () => {
         let url = `http://apis.data.go.kr/1352000/ODMS_COVID_04/callCovid04Api?serviceKey=DpuTpEYsEJh8hrpKo4Bgvxv%2F0M0Yni%2F1GZ%2BA9FzWexYLll17xqLnDETxSUFTVsH29VC8uZt%2FfhPEEEYvPUuGFw%3D%3D&apiType=JSON`;
 
@@ -26,7 +27,7 @@ useEffect(()=>{
                 const {items} = response.data
 
                 setTotalCovidData(items)
-                setTotalConfirmed(items.filter((item : City)=> item.gubun === "합계")[0].defCnt)
+                setTotalConfirmed(items?.filter((item : City)=> item.gubun === "합계")[0].defCnt)
             }catch(error){
                 console.log('에러',error)
             }
@@ -38,8 +39,15 @@ useEffect(()=>{
                 const response = await axios.get(url)
                 const {items} = response.data
                 
-                setTotalRecovered(items.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
-                setCityCovidData(items.sort((a:City,b:City)=> parseInt(b.deathCnt)-parseInt(a.deathCnt)))
+                setTotalRecovered(items?.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
+                setCityCovidData(items?.sort((a:City,b:City)=> {
+                    if(parseInt(b.deathCnt) !== parseInt(a.deathCnt)){
+                        return parseInt(b.deathCnt) - parseInt(a.deathCnt)
+                    }else {
+                        return b.stdDay > a.stdDay ? 1 : -1
+                    }
+                }))
+                // setCityCovidData(items.sort((a:City,b:City)=> new Date(a.stdDay).getTime() - new Date(b.stdDay).getTime()))
             }catch(error){
                 console.log('에러',error)
             }
@@ -68,8 +76,8 @@ return (
                     <ol className="rank-list">
                         {totalCovidData?.map((item : City)=>(
                             item.gubun !== "합계" && item.gubun !== "검역" && (
-                                <li className="city-list" onClick={()=> clickCityName(item.gubun)}>
-                                    <span>
+                                <li className="city-list flex" onClick={()=> clickCityName(item.gubun)}>
+                                    <span className="city-def">
                                     {item.defCnt}
                                     </span>
                                     {item.gubun}
@@ -86,16 +94,16 @@ return (
                         <h3 className="summary-title">Total Deaths</h3>
                         <p className="total deaths">{cityCovidData[0]?.deathCnt}</p>
                         <div className="list-wrapper">
-                            <ol className="deaths-list">
-                            {city && cityCovidData?.map(item=>(
+                            <ol className="right-list">
+                                {city && cityCovidData?.map(item=>(
                                     <li className="list-display">
-                                        <span>
-                                        {item.stdDay}
-                                        {item.gubun}
+                                        <span className='date-city'>
+                                            <span className='date'>
+                                                {item.stdDay}
+                                            </span>
+                                            {item.gubun}
                                         </span>
-                                        <span>
                                         {item.deathCnt}
-                                        </span>
                                     </li>
                                 ))}
                             </ol>
@@ -105,16 +113,16 @@ return (
                         <h3 className="summary-title">Total Recovered</h3>
                         <p className="total recovered">{totlaRecovered}</p>
                         <div className="list-wrapper">
-                            <ol className="recovered-list">
+                            <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
                                     <li className="list-display">
-                                        <span>
-                                        {item.stdDay}
-                                        {item.gubun}
+                                        <span className='date-city'>
+                                            <span className='date'>
+                                                {item.stdDay}
+                                            </span>
+                                            {item.gubun}
                                         </span>
-                                        <span>
                                         {item.isolClearCnt}
-                                        </span>
                                     </li>
                                 ))}
                             </ol>
