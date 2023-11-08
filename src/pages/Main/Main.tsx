@@ -47,7 +47,6 @@ useEffect(()=>{
                         return b.stdDay > a.stdDay ? 1 : -1
                     }
                 }))
-                // setCityCovidData(items.sort((a:City,b:City)=> new Date(a.stdDay).getTime() - new Date(b.stdDay).getTime()))
             }catch(error){
                 console.log('에러',error)
             }
@@ -76,7 +75,7 @@ return (
                     <ol className="rank-list">
                         {totalCovidData?.map((item : City)=>(
                             item.gubun !== "합계" && item.gubun !== "검역" && (
-                                <li className="city-list flex" onClick={()=> clickCityName(item.gubun)}>
+                                <li className={`city-list flex ${city === item.gubun ? "selected" : ""}`} onClick={()=> clickCityName(item.gubun)}>
                                     <span className="city-def">
                                     {item.defCnt}
                                     </span>
@@ -143,5 +142,3 @@ return (
 }
 
 export default Main
-
-const cityList = ["서울","경기","경남","경북","울산","인천","대구","대전","전남","전북","광주","충북","충남","강원","세종","부산","제주"]

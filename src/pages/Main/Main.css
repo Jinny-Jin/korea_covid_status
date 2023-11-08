@@ -107,7 +107,10 @@ header > h1 {
 }
 .city-list:hover{
     cursor: pointer;
-    background-color: #7fcd91;
+    background-color: #363232;
+}
+.selected{
+  background-color: #363232;
 }
 .city-def{
   width: 80px;
