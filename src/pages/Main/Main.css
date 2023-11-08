@@ -102,13 +102,20 @@ header > h1 {
   padding-top: 20px;
 }
 .city-list{
-    padding: 10px 0 10px 20px;
-    /* margin-bottom: 10px; */
-    font-size: 30px;
+    padding: 7px 0 7px 20px;
+    font-size: 18px;
 }
 .city-list:hover{
     cursor: pointer;
-    background-color: olive;
+    background-color: #363232;
+}
+.selected{
+  background-color: #363232;
+}
+.city-def{
+  width: 80px;
+  color: #f54741;
+  font-weight: 600;
 }
 .last-updated-time {
   margin-top: 1rem;
@@ -162,10 +169,12 @@ header > h1 {
 .list-wrapper {
   height: 340px;
 }
-.deaths-list {
-  height: 100%;
-  overflow: hidden;
-  overflow-y: auto;
+.list-display{
+  display: flex;
+  justify-content: space-between;
+}
+.date{
+  margin-right: 20px;
 }
 .list-item-b {
   height: 35px;
@@ -194,10 +203,11 @@ header > h1 {
 .recovered {
   color: #7fcd91;
 }
-.recovered-list {
+.right-list {
   height: 100%;
   overflow: hidden;
   overflow-y: auto;
+  padding: 10px 20px;
 }
 
 /* chart */
