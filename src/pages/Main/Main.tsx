@@ -17,28 +17,22 @@ const clickCityName = (value:string) => {
 
 useEffect(()=>{
 
-    const fetchCityCovidData = async () => {
+    const fetchCityCovidData = async () : Promise<void> => {
         let url = `http://apis.data.go.kr/1352000/ODMS_COVID_04/callCovid04Api?serviceKey=DpuTpEYsEJh8hrpKo4Bgvxv%2F0M0Yni%2F1GZ%2BA9FzWexYLll17xqLnDETxSUFTVsH29VC8uZt%2FfhPEEEYvPUuGFw%3D%3D&apiType=JSON`;
 
         if(!city){
-            url += `&std_Day=2023-08-30`
-            try{
-                const response = await axios.get(url)
-                const {items} = response.data
+            url += "&std_Day=2023-08-30"
+        }else{
+            url += `&gubun=${city}`;
+        }
+        try{
+            const response = await axios.get(url)
+            const {items} = response.data
 
+            if(!city){
                 setTotalCovidData(items)
                 setTotalConfirmed(items?.filter((item : City)=> item.gubun === "합계")[0].defCnt)
-            }catch(error){
-                console.log('에러',error)
-            }
-        }
-
-        if(city){
-            url += `&gubun=${city}`;
-            try {
-                const response = await axios.get(url)
-                const {items} = response.data
-                
+            }else{
                 setTotalRecovered(items?.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
                 setCityCovidData(items?.sort((a:City,b:City)=> {
                     if(parseInt(b.deathCnt) !== parseInt(a.deathCnt)){
@@ -47,9 +41,10 @@ useEffect(()=>{
                         return b.stdDay > a.stdDay ? 1 : -1
                     }
                 }))
-            }catch(error){
-                console.log('에러',error)
             }
+
+        }catch(error){
+            console.log('에러',error)
         }
     }
 
@@ -128,13 +123,12 @@ return (
                         </div>
                     </div>
                 </div>
-                {/* <div className="chart-container">
+                <div className="chart-container">
                 <canvas
                     id="lineChart"
                     className="corona-chart"
-                    style="width: 100%; height: 356px; background-color: #5b5656;"
                 ></canvas>
-                </div> */}
+                </div>
             </div>
         </main>
     </>
