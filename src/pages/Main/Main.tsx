@@ -1,19 +1,35 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import {Line} from 'react-chartjs-2'
+import {Chart as ChartJS,CategoryScale, LineElement,LinearScale, PointElement} from "chart.js"
 import './Main.css'
 import { City } from '@/types/covidData'
+ChartJS.register(CategoryScale,LineElement,LinearScale,PointElement)
 
 const Main = () => {
 const [totalCovidData, setTotalCovidData] = useState<City[]>([])
-const [cityCovidData,setCityCovidData] = useState<City[]>([])
+const [cityCovidData,setCityCovidData] = useState<City[] | null>(null)
 const [city,setCity] = useState<string | null>(null)
 const [totlaRecovered,setTotalRecovered] = useState<number>(0)
 const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
 
+const slicedCovidData = cityCovidData?.slice(0,15)
+
+const data = {
+    labels : slicedCovidData?.map(item => item.stdDay),
+    datasets : [
+        {
+            data : slicedCovidData?.map(item => item.defCnt),
+            borderColor : "red",
+            backgroundColor : "yellow",
+            borderWidth : 1
+        }
+    ]
+}
+
 const clickCityName = (value:string) => {
     setCity(value)
 }
-
 
 useEffect(()=>{
 
@@ -86,7 +102,7 @@ return (
                 <div className="summary-wrapper flex">
                     <div className="deaths-container">
                         <h3 className="summary-title">Total Deaths</h3>
-                        <p className="total deaths">{cityCovidData[0]?.deathCnt}</p>
+                        <p className="total deaths">{cityCovidData? cityCovidData[0]?.deathCnt : 0}</p>
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
@@ -124,10 +140,7 @@ return (
                     </div>
                 </div>
                 <div className="chart-container">
-                <canvas
-                    id="lineChart"
-                    className="corona-chart"
-                ></canvas>
+                    <Line data={data} />
                 </div>
             </div>
         </main>
