@@ -49,8 +49,8 @@ ol {
 
 /* common stylesheets */
 body {
-  background: #4d4646;
-  color: white;
+  background: #3f611d;
+  color: black;
 }
 main {
   padding: 0 1rem;
@@ -61,6 +61,7 @@ header > h1 {
   font-size: 2rem;
   font-weight: 600;
   padding: 1.2rem 0;
+  color: rgb(254, 244, 224);
 }
 
 /* left panel */
@@ -68,10 +69,11 @@ header > h1 {
   width: 33%;
 }
 .total-board {
-  background-color: #5b5656;
+  background-color: rgb(254, 244, 224);
   width: 100%;
   height: 100px;
   text-align: center;
+  border-radius: 20px;
 }
 .total-board > p {
   font-size: 1.75rem;
@@ -85,10 +87,10 @@ header > h1 {
 }
 .country-ranks {
   margin-top: 1rem;
-  background-color: #5b5656;
+  background-color: rgb(254, 244, 224);
   width: 100%;
   height: 600px;
-  /* position: relative; */
+  border-radius: 20px;
 }
 .country-ranks > p {
   text-align: center;
@@ -107,10 +109,10 @@ header > h1 {
 }
 .city-list:hover{
     cursor: pointer;
-    background-color: #363232;
+    background-color: rgb(252, 226, 192);
 }
 .selected{
-  background-color: #363232;
+  background-color: rgb(252, 226, 192);
 }
 .city-def{
   width: 80px;
@@ -119,32 +121,12 @@ header > h1 {
 }
 .last-updated-time {
   margin-top: 1rem;
-  background-color: #5b5656;
+  background-color: rgb(254, 244, 224);
   width: 100%;
   height: 80px;
   font-size: 1.25rem;
   font-weight: 600;
-}
-.list-item {
-  height: 40px;
-  border-bottom: solid 1px rgb(155, 155, 155);
-  color: #f5eaea;
-  cursor: pointer;
-}
-.list-item:hover {
-  background-color: #e1f4f3;
-  color: #333333;
-}
-.cases {
-  color: #f54741;
-  font-size: 1.125rem;
-  font-weight: 750;
-  padding: 0 0.7rem;
-  width: 98px;
-}
-.country {
-  font-size: 1.125rem;
-  font-weight: 600;
+  border-radius: 20px;
 }
 /* right panel */
 .right-panel {
@@ -152,10 +134,12 @@ header > h1 {
   width: 66%;
 }
 .deaths-container {
-  background-color: #5b5656;
+  background-color: rgb(254, 244, 224);
   width: 100%;
   height: 440px;
   text-align: center;
+  border-radius: 20px;
+  padding-right:10px;
 }
 .summary-title {
   padding: 0.5rem 0;
@@ -176,29 +160,12 @@ header > h1 {
 .date{
   margin-right: 20px;
 }
-.list-item-b {
-  height: 35px;
-  border-bottom: solid 1px rgb(155, 155, 155);
-  color: #f5eaea;
-}
-.list-item-b > .deaths {
-  padding: 0 0.4rem;
-  font-size: 1.125rem;
-  font-weight: 550;
-  width: 84px;
-  color: white;
-}
-.list-item-b > .recovered {
-  padding: 0 0.4rem;
-  font-size: 1.125rem;
-  font-weight: 550;
-  width: 84px;
-}
 .recovered-container {
   margin-left: 1rem;
-  background-color: #5b5656;
+  background-color: rgb(254, 244, 224);
   width: 100%;
   text-align: center;
+  border-radius: 20px;
 }
 .recovered {
   color: #7fcd91;
@@ -212,48 +179,10 @@ header > h1 {
 
 /* chart */
 .chart-container {
-  margin-top: 1rem;
+  margin: 1rem 0;
+  padding: 1rem;
   height: 356px;
-}
-.corona-chart{
   width: 100%;
-  height: 356px;
-  background-color: #5b5656;
-}
-
-/* spinner */
-.spinner-wrapper {
-  height: 100%;
-}
-.ripple-spinner {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.ripple-spinner div {
-  position: absolute;
-  border: 4px solid #fff;
-  border-radius: 50%;
-  opacity: 1;
-  animation: ripple-spinner 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-}
-.ripple-spinner div:nth-child(2) {
-  animation-delay: -0.3s;
-}
-@keyframes ripple-spinner {
-  0% {
-    top: 36px;
-    left: 36px;
-    width: 0;
-    height: 0;
-    opacity: 1;
-  }
-  100% {
-    top: 0px;
-    left: 0px;
-    width: 72px;
-    height: 72px;
-    opacity: 0;
-  }
+  background-color: rgb(254, 244, 224);
+  border-radius: 20px;
 }

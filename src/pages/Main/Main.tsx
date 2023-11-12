@@ -1,19 +1,52 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import './Main.css'
+import {Line} from 'react-chartjs-2'
+import {Chart as ChartJS,CategoryScale, LineElement,LinearScale, PointElement,Tooltip} from "chart.js"
 import { City } from '@/types/covidData'
+import './Main.css'
+ChartJS.register(CategoryScale,LineElement,LinearScale,PointElement,Tooltip)
 
 const Main = () => {
+
 const [totalCovidData, setTotalCovidData] = useState<City[]>([])
-const [cityCovidData,setCityCovidData] = useState<City[]>([])
+const [cityCovidData,setCityCovidData] = useState<City[] | null>(null)
 const [city,setCity] = useState<string | null>(null)
-const [totlaRecovered,setTotalRecovered] = useState<number>(0)
 const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
+const [totalRecovered, setTotalRecovered] = useState<number>(0)
+
+const slicedCovidData = cityCovidData?.filter((item,index,self)=> {
+    return index === self.findIndex((t)=> t.stdDay === item.stdDay)
+})
+.sort((a,b) => parseInt(b.defCnt) - parseInt(a.defCnt))
+.slice(0,15)
+
+const data = {
+    labels : slicedCovidData?.map(item => item.stdDay).reverse(),
+    datasets : [
+        {
+            data : slicedCovidData?.map(item => item.defCnt).reverse(),
+            borderColor : "red",
+            backgroundColor : "pink",
+            borderWidth : 1
+        }
+    ]
+}
+
+const options = {
+    responsive : true,
+    maintainAspectRatio: false, 
+    aspectRatio: 2,
+    plugins : {
+        tooltip : {
+            mode : "index" as const,
+            intersect : false
+        }
+    }
+}
 
 const clickCityName = (value:string) => {
     setCity(value)
 }
-
 
 useEffect(()=>{
 
@@ -32,6 +65,7 @@ useEffect(()=>{
             if(!city){
                 setTotalCovidData(items)
                 setTotalConfirmed(items?.filter((item : City)=> item.gubun === "합계")[0].defCnt)
+                setCity(items[0]?.gubun)
             }else{
                 setTotalRecovered(items?.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
                 setCityCovidData(items?.sort((a:City,b:City)=> {
@@ -49,6 +83,7 @@ useEffect(()=>{
     }
 
     fetchCityCovidData()
+
 },[city])
 
 
@@ -86,7 +121,7 @@ return (
                 <div className="summary-wrapper flex">
                     <div className="deaths-container">
                         <h3 className="summary-title">Total Deaths</h3>
-                        <p className="total deaths">{cityCovidData[0]?.deathCnt}</p>
+                        <p className="total deaths">{cityCovidData? cityCovidData[0]?.deathCnt : 0}</p>
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
@@ -105,7 +140,7 @@ return (
                     </div>
                     <div className="recovered-container">
                         <h3 className="summary-title">Total Recovered</h3>
-                        <p className="total recovered">{totlaRecovered}</p>
+                        <p className="total recovered">{totalRecovered}</p>
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
@@ -124,10 +159,7 @@ return (
                     </div>
                 </div>
                 <div className="chart-container">
-                <canvas
-                    id="lineChart"
-                    className="corona-chart"
-                ></canvas>
+                    <Line data={data} options={options}/>
                 </div>
             </div>
         </main>
