@@ -14,7 +14,11 @@ const [city,setCity] = useState<string | null>(null)
 const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
 const [totalRecovered, setTotalRecovered] = useState<number>(0)
 
-const slicedCovidData = cityCovidData?.slice(0,15)
+const slicedCovidData = cityCovidData?.filter((item,index,self)=> {
+    return index === self.findIndex((t)=> t.stdDay === item.stdDay)
+})
+.sort((a,b) => parseInt(b.defCnt) - parseInt(a.defCnt))
+.slice(0,15)
 
 const data = {
     labels : slicedCovidData?.map(item => item.stdDay).reverse(),
