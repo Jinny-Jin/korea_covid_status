@@ -46,6 +46,14 @@ ol {
 .align-center {
   align-items: center;
 }
+*::-webkit-scrollbar{
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb{
+  height: 20%;
+  background: #3f611d;
+  border-radius: 10px;
+}
 
 /* common stylesheets */
 body {
@@ -74,11 +82,12 @@ header > h1 {
   height: 100px;
   text-align: center;
   border-radius: 20px;
+  padding: 1rem 0;
 }
 .total-board > p {
   font-size: 1.75rem;
   font-weight: 600;
-  padding: 1.2rem 0 0.5rem 0;
+  padding-bottom: 0.5rem;
 }
 .confirmed-total {
   color: #f54741;
@@ -91,6 +100,7 @@ header > h1 {
   width: 100%;
   height: 600px;
   border-radius: 20px;
+  padding-right:10px;
 }
 .country-ranks > p {
   text-align: center;
@@ -156,6 +166,7 @@ header > h1 {
 .list-display{
   display: flex;
   justify-content: space-between;
+  padding-bottom: 5px;
 }
 .date{
   margin-right: 20px;
@@ -166,9 +177,10 @@ header > h1 {
   width: 100%;
   text-align: center;
   border-radius: 20px;
+  padding-right:10px
 }
 .recovered {
-  color: #7fcd91;
+  color: #3f611d;
 }
 .right-list {
   height: 100%;
