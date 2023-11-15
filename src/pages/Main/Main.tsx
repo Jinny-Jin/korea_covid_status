@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import {Line} from 'react-chartjs-2'
 import {Chart as ChartJS,CategoryScale, LineElement,LinearScale, PointElement,Tooltip} from "chart.js"
+import axios from 'axios'
 import { City } from '@/types/covidData'
 import './Main.css'
 ChartJS.register(CategoryScale,LineElement,LinearScale,PointElement,Tooltip)
@@ -11,8 +11,16 @@ const Main = () => {
 const [totalCovidData, setTotalCovidData] = useState<City[]>([])
 const [cityCovidData,setCityCovidData] = useState<City[] | null>(null)
 const [city,setCity] = useState<string | null>(null)
-const [totalConfirmed, setTotalConfirmed] = useState<number>(0)
-const [totalRecovered, setTotalRecovered] = useState<number>(0)
+
+const totalConfirmed = totalCovidData?.find(item => item.gubun === "합계")?.defCnt || 0
+const totalRecovered = cityCovidData?.reduce((max,item) => {
+    const current = parseInt(item.isolClearCnt)
+    return current > max ? current : max
+},0) || 0
+
+const clickCityName = (value:string) => {
+    setCity(value)
+}
 
 const slicedCovidData = cityCovidData?.filter((item,index,self)=> {
     return index === self.findIndex((t)=> t.stdDay === item.stdDay)
@@ -44,10 +52,6 @@ const options = {
     }
 }
 
-const clickCityName = (value:string) => {
-    setCity(value)
-}
-
 useEffect(()=>{
 
     const fetchCityCovidData = async () : Promise<void> => {
@@ -64,10 +68,8 @@ useEffect(()=>{
 
             if(!city){
                 setTotalCovidData(items)
-                setTotalConfirmed(items?.filter((item : City)=> item.gubun === "합계")[0].defCnt)
                 setCity(items[0]?.gubun)
             }else{
-                setTotalRecovered(items?.sort((a:City,b:City)=> parseInt(b.isolClearCnt)-parseInt(a.isolClearCnt))[0].isolClearCnt)
                 setCityCovidData(items?.sort((a:City,b:City)=> {
                     if(parseInt(b.deathCnt) !== parseInt(a.deathCnt)){
                         return parseInt(b.deathCnt) - parseInt(a.deathCnt)
@@ -105,7 +107,7 @@ return (
                     <ol className="rank-list">
                         {totalCovidData?.map((item : City)=>(
                             item.gubun !== "합계" && item.gubun !== "검역" && (
-                                <li className={`city-list flex ${city === item.gubun ? "selected" : ""}`} onClick={()=> clickCityName(item.gubun)}>
+                                <li className={`city-list flex ${city === item.gubun ? "selected" : ""}`} key={item.gubunEn} onClick={()=> clickCityName(item.gubun)}>
                                     <span className="city-def">
                                     {item.defCnt}
                                     </span>
@@ -127,7 +129,7 @@ return (
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
-                                    <li className="list-display">
+                                    <li className="list-display" key={item.stdDay}>
                                         <span className='date-city'>
                                             <span className='date'>
                                                 {item.stdDay}
@@ -146,7 +148,7 @@ return (
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
-                                    <li className="list-display">
+                                    <li className="list-display" key={item.stdDay}>
                                         <span className='date-city'>
                                             <span className='date'>
                                                 {item.stdDay}
