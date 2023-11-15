@@ -115,7 +115,9 @@ return (
                     ))}
                     </ol>
                 </div>
-                <p className="last-updated-time flex justify-center align-center"></p>
+                <p className="last-updated-time flex justify-center align-center">
+                    {totalCovidData[0]?.stdDay}
+                </p>
             </div>
             <div className="right-panel">
                 <div className="summary-wrapper flex">

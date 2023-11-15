@@ -32,6 +32,14 @@ ol {
   box-sizing: border-box;
   font-family: 'Exo 2', sans-serif;
 }
+*::-webkit-scrollbar{
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb{
+  height: 20%;
+  background: #3f611d;
+  border-radius: 10px;
+}
 
 /* util stylesheets */
 .flex {
@@ -46,19 +54,18 @@ ol {
 .align-center {
   align-items: center;
 }
-*::-webkit-scrollbar{
-  width: 8px;
-}
-*::-webkit-scrollbar-thumb{
-  height: 20%;
-  background: #3f611d;
-  border-radius: 10px;
-}
 
 /* common stylesheets */
 body {
   background: #3f611d;
-  color: black;
+}
+body::-webkit-scrollbar{
+  width: 20px;
+}
+body::-webkit-scrollbar-thumb{
+  background-color: rgb(254, 244, 224);
+  border-radius: 10px;
+  border: 7px solid #3f611d;
 }
 main {
   padding: 0 1rem;
