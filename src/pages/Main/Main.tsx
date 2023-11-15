@@ -107,7 +107,7 @@ return (
                     <ol className="rank-list">
                         {totalCovidData?.map((item : City)=>(
                             item.gubun !== "합계" && item.gubun !== "검역" && (
-                                <li className={`city-list flex ${city === item.gubun ? "selected" : ""}`} key={item.gubunEn} onClick={()=> clickCityName(item.gubun)}>
+                                <li className={`city-list flex ${city === item.gubun ? "selected" : ""}`} onClick={()=> clickCityName(item.gubun)}>
                                     <span className="city-def">
                                     {item.defCnt}
                                     </span>
@@ -129,7 +129,7 @@ return (
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
-                                    <li className="list-display" key={item.stdDay}>
+                                    <li className="list-display">
                                         <span className='date-city'>
                                             <span className='date'>
                                                 {item.stdDay}
@@ -148,7 +148,7 @@ return (
                         <div className="list-wrapper">
                             <ol className="right-list">
                                 {city && cityCovidData?.map(item=>(
-                                    <li className="list-display" key={item.stdDay}>
+                                    <li className="list-display">
                                         <span className='date-city'>
                                             <span className='date'>
                                                 {item.stdDay}
